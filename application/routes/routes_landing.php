@@ -1,2 +1,2 @@
 <?php
-$route['default_controller'] = 'web';
+$route['default_controller'] = 'auth/backend/auth/login';
