@@ -54,6 +54,15 @@ if (!function_exists('db_get_all_data')) {
 		return $query->result();
 	}
 }
+if (!function_exists('get_user')) {
+	function get_user($id)
+	{
+		$ci = &get_instance();
+		$query = $ci->db->get_where('aauth_users', ['id' => $id]);
+
+		return $query->row();
+	}
+}
 
 if (!function_exists('is_image')) {
 	function is_image($filename = '')
