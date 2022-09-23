@@ -61,9 +61,11 @@
                                             <tr>
                                                 <th scope="col" rowspan="3">No</th>
                                                 <th scope="col" rowspan="3">No Kriteria</th>
-                                                <th scope="col" rowspan="3">Kriteria</th>
+                                                <th scope="col" rowspan="3">ID</th>
+                                                <th scope="col" rowspan="3">Interpretasi Kriteria</th>
                                                 <th scope="col" rowspan="3">Tidak Berlaku</th>
                                                 <th scope="col" colspan="4">Pemenuhannya</th>
+
                                             </tr>
                                             <tr>
                                                 <th rowspan="2">sesuai</th>
@@ -83,30 +85,27 @@
                                                 'method' => 'POST'
                                             ]); ?>
                                             <?php $no = 1;
-                                            foreach (db_get_all_data('kriteria_audit') as $audit) : ?>
+                                            foreach (db_get_all_data('master_interpretasi_kriteria_audit') as $audit) : ?>
                                                 <tr>
                                                     <td class="text-center"><?= $no; ?></td>
-                                                    <td class="text-right"><?= $audit->no_kriteria; ?></td>
-                                                    <td><?= $audit->kriteria; ?></td>
-                                                    <?php if (substr_count($audit->no_kriteria, ".") > 1) : ?>
-                                                        <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="tidak_berlaku">
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" value="sesuai">
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="major">
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="minor">
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="observasi">
-                                                        </td>
-                                                    <?php else : ?>
-                                                        <td colspan="5"></td>
-                                                    <?php endif; ?>
+                                                    <td class="text-right"><?= $audit->id_kriteria; ?></td>
+                                                    <td class="text-center"><?= $audit->id; ?></td>
+                                                    <td><?= $audit->interpretasi_kriteria; ?></td>
+                                                    <td class="text-center">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="tidak_berlaku">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" value="sesuai">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="major">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="minor">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="observasi">
+                                                    </td>
                                                 </tr>
                                             <?php $no++;
                                             endforeach; ?>

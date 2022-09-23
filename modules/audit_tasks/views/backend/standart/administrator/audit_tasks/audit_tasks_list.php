@@ -191,22 +191,34 @@
                                     <td><span class="list_group-member1"><?= _ent(get_user($audit_tasks->member1)->full_name); ?></span></td>
                                     <td><span class="list_group-member2"><?= _ent(get_user($audit_tasks->member2)->full_name); ?></span></td>
                                     <td>
-                                       <?php if ($audit_tasks->status == 1) : ?>
-                                          <a href="<?= site_url('administrator/audit_tasks/audit_pemenuhan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-success">Telah di audit</a>
-                                       <?php endif; ?>
+                                       <?php if ($audit_tasks->status == 1) { ?>
+                                          <span class="text-info"> Telah di audit </span>
+                                       <?php } else if ($audit_tasks->status == 2) { ?>
+                                          <p class="help-block"><b>Batas waktu perbaikan :</b> <span class="text-danger"><?= $audit_tasks->batas_waktu; ?></span></p>
+                                       <?php } else if ($audit_tasks->status == 3) { ?>
+                                          <p class="help-block"><b>Perbaikan telah dilakukan pada :</b> <span class="text-danger"><?= $audit_tasks->waktu_perbaikan; ?></span></p>
+                                       <?php } else { ?>
+                                          <span class="text-danger"> Belum di audit </span>
+                                       <?php } ?>
                                     </td>
-                                    <td width="200">
-                                       <a href="<?= site_url('administrator/audit_tasks/audit_pemenuhan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-info"><i class="fa fa-check-square-o"></i> Audit</a>
+                                    <td>
+                                       <?php if ($audit_tasks->status == 0) { ?>
+                                          <a href="<?= site_url('administrator/audit_tasks/audit_pemenuhan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-success"><i class="fa fa-check-square-o"></i> Audit</a>
+                                       <?php } else if ($audit_tasks->status == 1) { ?>
+                                          <a href="<?= site_url('administrator/audit_tasks/review_audit/' . $audit_tasks->id); ?>" class="btn btn-sm btn-info"><i class="fa fa-check-square-o"></i> Review</a>
+                                       <?php } else if ($audit_tasks->status == 2) { ?>
+                                          <a href="<?= site_url('administrator/audit_tasks/audit_perbaikan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-warning"><i class="fa fa-check-square-o"></i> Perbaikan</a>
+                                       <?php } else if ($audit_tasks->status == 3) { ?>
+                                          <a href="<?= site_url('administrator/audit_tasks/audit_review_perbaikan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-success"><i class="fa fa-check-square-o"></i> Review Perbaikan</a>
+                                       <?php } ?>
+                                       <br>
 
-                                       <?php is_allowed('audit_tasks_view', function () use ($audit_tasks) { ?>
-                                          <a href="<?= site_url('administrator/audit_tasks/view/' . $audit_tasks->id); ?>" class="label-default"><i class="fa fa-newspaper-o"></i> <?= cclang('view_button'); ?>
-                                          <?php }) ?>
-                                          <?php is_allowed('audit_tasks_update', function () use ($audit_tasks) { ?>
-                                             <a href="<?= site_url('administrator/audit_tasks/edit/' . $audit_tasks->id); ?>" class="label-default"><i class="fa fa-edit "></i> <?= cclang('update_button'); ?></a>
-                                          <?php }) ?>
-                                          <?php is_allowed('audit_tasks_delete', function () use ($audit_tasks) { ?>
-                                             <a href="javascript:void(0);" data-href="<?= site_url('administrator/audit_tasks/delete/' . $audit_tasks->id); ?>" class="label-default remove-data"><i class="fa fa-close"></i> <?= cclang('remove_button'); ?></a>
-                                          <?php }) ?>
+                                       <?php is_allowed('audit_tasks_update', function () use ($audit_tasks) { ?>
+                                          <a href="<?= site_url('administrator/audit_tasks/edit/' . $audit_tasks->id); ?>" class="label-default"><i class="fa fa-edit "></i> <?= cclang('update_button'); ?></a> <br>
+                                       <?php }) ?>
+                                       <?php is_allowed('audit_tasks_delete', function () use ($audit_tasks) { ?>
+                                          <a href="javascript:void(0);" data-href="<?= site_url('administrator/audit_tasks/delete/' . $audit_tasks->id); ?>" class="label-default remove-data"><i class="fa fa-close"></i> <?= cclang('remove_button'); ?></a>
+                                       <?php }) ?>
 
                                     </td>
                                  </tr>

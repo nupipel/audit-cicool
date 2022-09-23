@@ -56,6 +56,9 @@
                         <div class="form-horizontal form-step" name="form_audit_tasks" id="form_audit_tasks">
                             <div class="container">
                                 <div class="form-group ">
+                                    <?php if ($audit_task->status == "2") : ?>
+                                        <h4>Batas waktu perbaikan : <span class="text-danger"><?= $audit_task->batas_waktu; ?></span></h4>
+                                    <?php endif; ?>
                                     <table class="table table-hover table-bordered">
                                         <thead class="bg-info">
                                             <tr>
@@ -77,26 +80,26 @@
                                         </thead>
                                         <tbody>
                                             <?php $no = 1;
-                                            foreach (db_get_all_data('kriteria_audit') as $audit) : ?>
+                                            foreach ($hasil_audits as $audit) : ?>
                                                 <tr>
                                                     <td class="text-center"><?= $no; ?></td>
                                                     <td class="text-right"><?= $audit->no_kriteria; ?></td>
                                                     <td><?= $audit->kriteria; ?></td>
                                                     <?php if (substr_count($audit->no_kriteria, ".") > 1) : ?>
                                                         <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="tidak_berlaku">
+                                                            <?= $audit->pemenuhan == 'tidak_berlaku' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
                                                         </td>
                                                         <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" value="sesuai">
+                                                            <?= $audit->pemenuhan == 'sesuai' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
                                                         </td>
                                                         <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="major">
+                                                            <?= $audit->pemenuhan == 'major' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
                                                         </td>
                                                         <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="minor">
+                                                            <?= $audit->pemenuhan == 'minor' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
                                                         </td>
                                                         <td class="text-center">
-                                                            <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->no_kriteria; ?>" data-value="<?= $audit->kriteria ?>" value="observasi">
+                                                            <?= $audit->pemenuhan == 'observasi' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
                                                         </td>
                                                     <?php else : ?>
                                                         <td colspan="5"></td>
@@ -108,150 +111,142 @@
 
                                     </table>
                                 </div>
-                                <form action="" id="tidak_berlaku">
-                                    <u>
-                                        <h4>PENJELASAN TENTANG KRITERIA TIDAK BERLAKU</h4>
-                                    </u>
-                                    <div class="tidak_berlaku">
 
-                                    </div>
-                                </form>
-                                <hr>
-                                <form action="" id="tidak_sesuai">
-                                    <u>
-                                        <h4>TEMUAN KETIDAK SESUAIAN</h4>
-                                    </u>
-                                    <div class="tidak_sesuai">
-
-                                    </div>
-                                </form>
-                                <hr>
-                                <form action="" id="observasi">
-                                    <u>
-                                        <h4>TEMUAN OBSERVASI</h4>
-                                    </u>
-                                    <div class="observasi">
-
-                                    </div>
-                                </form>
+                                <u>
+                                    <h4>PENJELASAN TENTANG KRITERIA TIDAK BERLAKU</h4>
+                                </u>
+                                <table class="table table-bordered">
+                                    <tr class="bg-warning">
+                                        <th>No kriteria</th>
+                                        <th>Kriteria</th>
+                                        <th>Penjelasan</th>
+                                    </tr>
+                                    <?php foreach ($tidak_berlaku as $tb) : ?>
+                                        <tr>
+                                            <td><?= $tb->no_kriteria; ?></td>
+                                            <th><?= $tb->kriteria; ?></th>
+                                            <td><?= $tb->penjelasan; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
                                 <hr>
 
-                            </div>
+                                <u>
+                                    <h4>TEMUAN KETIDAK SESUAIAN</h4>
+                                </u>
+                                <table class="table table-bordered">
+                                    <tr class="bg-warning">
+                                        <th>No kriteria</th>
+                                        <th>Kriteria</th>
+                                        <th>Bukti Objektif</th>
+                                        <th>Kategori</th>
+                                    </tr>
+                                    <?php foreach ($ketidak_sesuaian as $tb) : ?>
+                                        <tr>
+                                            <td><?= $tb->no_kriteria; ?></td>
+                                            <th><?= $tb->kriteria; ?></th>
+                                            <td><?= $tb->bukti_objektif; ?></td>
+                                            <td><?= $tb->pemenuhan; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+
+                                <hr>
 
 
-                            <div class="message"></div>
-                            <br>
-                            <br>
+                                <u>
+                                    <h4>TEMUAN OBSERVASI</h4>
+                                </u>
+                                <table class="table table-bordered">
+                                    <tr class="bg-warning">
+                                        <th>No kriteria</th>
+                                        <th>Kriteria</th>
+                                        <th>Bukti Objektif</th>
+                                    </tr>
+                                    <?php foreach ($observasi as $tb) : ?>
+                                        <tr>
+                                            <td><?= $tb->no_kriteria; ?></td>
+                                            <th><?= $tb->kriteria; ?></th>
+                                            <td><?= $tb->bukti_objektif; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                                <hr>
+                                <br>
 
-                            <div class="view-nav">
-                                <div class="row-fluid col-md-7 container-button-bottom">
-                                    <button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay' title="<?= cclang('save_button'); ?> (Ctrl+s)">
-                                        <i class="fa fa-save"></i> <?= cclang('save_button'); ?>
-                                    </button>
-                                    <a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save" data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
-                                        <i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
-                                    </a>
+                                <?=
+                                form_open('', [
+                                    'name' => 'batas_waktu',
+                                    'id' => 'batas_waktu',
+                                    'class' => 'form-horizontal form-step',
+                                    'enctype' => 'multipart/form-data',
+                                    'method' => 'POST'
+                                ]);
+                                ?>
 
-                                    <div class="custom-button-wrapper">
-
+                                <div class="form-group">
+                                    <label for="batas_waktu" class="col-sm-2 control-label">Batas waktu perbaikan<i class="required">*</i>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control datepicker" name="batas_waktu" id="batas_waktu" placeholder="Batas waktu perbaikan" value="<?= set_value('batas_waktu', $audit_task->batas_waktu); ?>">
+                                        <small class="info help-block">
+                                        </small>
                                     </div>
-
-
-                                    <a class="btn btn-flat btn-default btn_action" id="btn_cancel" title="<?= cclang('cancel_button'); ?> (Ctrl+x)">
-                                        <i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
-                                    </a>
-
-                                    <span class="loading loading-hide">
-                                        <img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
-                                        <i><?= cclang('loading_saving_data'); ?></i>
-                                    </span>
                                 </div>
+
+                                <?= form_close(); ?>
+
+                                <div class="message"></div>
+                                <br>
+                                <br>
+
+                                <div class="view-nav">
+                                    <div class="row-fluid col-md-7 container-button-bottom">
+                                        <button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay' title="<?= cclang('save_button'); ?> (Ctrl+s)">
+                                            <i class="fa fa-save"></i> <?= cclang('save_button'); ?>
+                                        </button>
+                                        <a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save" data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
+                                            <i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
+                                        </a>
+
+                                        <div class="custom-button-wrapper">
+
+                                        </div>
+
+
+                                        <a class="btn btn-flat btn-default btn_action" id="btn_cancel" title="<?= cclang('cancel_button'); ?> (Ctrl+x)">
+                                            <i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
+                                        </a>
+
+                                        <span class="loading loading-hide">
+                                            <img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
+                                            <i><?= cclang('loading_saving_data'); ?></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr>
+
+
                             </div>
-
-                            <hr>
-
-
-
                         </div>
                     </div>
+                    <!--/box body -->
                 </div>
-                <!--/box body -->
+                <!--/box -->
             </div>
-            <!--/box -->
-
-
-            <!-- modal penjelasan -->
-
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel"></h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="explained-modal">
-
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-save"></i> Simpan</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </div>
 </section>
 <!-- /.content -->
 
 <script>
-    function bindingValue(namee, value) {
-        $('textarea[name="' + namee + '"]').val(value);
-    }
     $(document).ready(function() {
-        $('input[type="radio"]').iCheck({
-            radioClass: 'iradio_minimal-blue'
-        });
-
-
         $('.btn_save').click(function(e) {
             e.preventDefault();
             $('.message').fadeOut();
-            var audit_pemenuhan = $('#audit_pemenuhan');
-            var data_post = audit_pemenuhan.serializeArray();
+            var batas_waktu = $('#batas_waktu');
+            var data_post = batas_waktu.serializeArray();
             var save_type = $(this).attr('data-stype');
 
-            let tidak_berlaku = $('#tidak_berlaku').serializeArray();
-            let tidak_sesuai = $('#tidak_sesuai').serializeArray();
-            let observasi = $('#observasi').serializeArray();
-
-            $.each(tidak_berlaku, function() {
-                data_post.push({
-                    name: this.name,
-                    value: this.value
-                });
-            });
-            $.each(tidak_sesuai, function() {
-                data_post.push({
-                    name: this.name,
-                    value: this.value
-                });
-            });
-            $.each(observasi, function() {
-                data_post.push({
-                    name: this.name,
-                    value: this.value
-                });
-            });
-
-            $('input[type="radio"]:checked').each(function() {
-                data_post.push({
-                    name: this.name,
-                    value: this.value
-                });
-            })
             data_post.push({
                 name: 'id_task',
                 value: <?= $id_task; ?>
@@ -261,12 +256,12 @@
                 value: save_type
             });
 
-            console.log(data_post)
+            console.log(data_post);
 
             $('.loading').show();
 
             $.ajax({
-                    url: BASE_URL + '/administrator/audit_tasks/save_audit_pemenuhan',
+                    url: BASE_URL + '/administrator/audit_tasks/save_batas_waktu_perbaikan',
                     type: 'POST',
                     dataType: 'json',
                     data: data_post,
@@ -284,11 +279,7 @@
                             message: res.message
                         });
                         $('.message').fadeIn();
-                        resetForm();
-                        $('.chosen option').prop('selected', false).trigger('chosen:updated');
-                        // ket_kriteria_tdk_berlaku.setData('');
-
-
+                        location.reload(true);
                     } else {
                         if (res.errors) {
 
@@ -329,11 +320,4 @@
         }); /*end btn save*/
 
     });
-</script>
-
-
-<script>
-    function openModal() {
-        $('#myModal').modal('show');
-    }
 </script>
