@@ -301,7 +301,7 @@
             $('.loading').show();
 
             $.ajax({
-                    url: BASE_URL + '/administrator/audit_tasks/save_audit_perbaikan',
+                    url: BASE_URL + '/administrator/audit_tasks/save_verifikasi_perbaikan',
                     type: 'POST',
                     dataType: 'json',
                     data: data_post,

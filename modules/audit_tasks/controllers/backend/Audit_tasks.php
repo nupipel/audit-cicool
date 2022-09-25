@@ -699,21 +699,22 @@ class Audit_tasks extends Admin
 		$id_task = $this->input->post('id_task');
 		$inputs = $this->input->post();
 
-		$verifikasi = [];
+		$tindakan = [];
 
 		foreach ($inputs as $key => $data) {
 
-			if (substr($key, 0, 6) == "verif_") {
-				array_push($verifikasi, [
-					'id_kriteria'		=> str_replace("_", ".", substr($key, 6)),
-					'status'			=> $data,
+			if (substr($key, 0, 9) == "tindakan_") {
+				array_push($tindakan, [
+					'id_kriteria'		=> str_replace("_", ".", substr($key, 9)),
+					'tindakan'			=> $data,
+					'target_waktu_selesai'	=> $this->input->post('waktu_' . substr($key, 9))
 				]);
 			}
 		}
+
 		// UPDATE KRITERIA_KETIDAKSESUAIAN 
-
-		$save_tindakan = $this->db->update_batch('kriteria_ketidaksesuaian', $verifikasi, 'id_kriteria');
-
+		$this->db->where('id_task', $id_task);
+		$save_tindakan = $this->db->update_batch('kriteria_ketidaksesuaian', $tindakan, 'id_kriteria');
 
 		if ($save_tindakan) {
 			// update status audit_tasks
@@ -764,6 +765,62 @@ class Audit_tasks extends Admin
 		$this->render('backend/standart/administrator/audit_tasks/audit_review_perbaikan', $data);
 	}
 
+	function save_verifikasi_perbaikan()
+	{
+		$id_task = $this->input->post('id_task');
+		$inputs = $this->input->post();
+
+		$verifikasi = [];
+
+		foreach ($inputs as $key => $data) {
+
+			if (substr($key, 0, 6) == "verif_") {
+				array_push($verifikasi, [
+					'id_kriteria'		=> str_replace("_", ".", substr($key, 6)),
+					'status'			=> $data,
+				]);
+			}
+		}
+
+		// UPDATE KRITERIA_KETIDAKSESUAIAN 
+		$this->db->where('id_task', $id_task);
+		$save_tindakan = $this->db->update_batch('kriteria_ketidaksesuaian', $verifikasi, 'id_kriteria');
+		if ($save_tindakan) {
+			// update status audit_tasks
+			$this->db->update('audit_tasks', ['status' => "done"], ['id' => $id_task]);
+
+			if ($this->input->post('save_type') == 'stay') {
+				$this->data['success'] = true;
+				$this->data['id'] 	   = $save_tindakan;
+				$this->data['message'] = cclang('success_save_data_stay', [
+					// anchor('administrator/audit_tasks/edit/' . $update_data_audit_tasks, 'Edit Audit Tasks'),
+					// anchor('administrator/audit_tasks', ' Go back to list')
+				]);
+			} else {
+				set_message(
+					cclang('success_save_data_redirect', [
+						// anchor('administrator/audit_tasks/edit/' . $update_data_audit_tasks, 'Edit Audit Tasks')
+					]),
+					'success'
+				);
+
+				$this->data['success'] = true;
+				$this->data['redirect'] = base_url('administrator/audit_tasks');
+			}
+		} else {
+			if ($this->input->post('save_type') == 'stay') {
+				$this->data['success'] = false;
+				$this->data['message'] = cclang('data_not_change');
+			} else {
+				$this->data['success'] = false;
+				$this->data['message'] = cclang('data_not_change');
+				$this->data['redirect'] = base_url('administrator/audit_tasks');
+			}
+		}
+
+		$this->response($this->data);
+	}
+
 	function audit_hasil($id_task)
 	{
 		$data = [
@@ -790,7 +847,7 @@ class Audit_tasks extends Admin
 
 		$hasil = ($up / $down) / 100;
 
-		$data['hasil'] = $hasil;
+		$data['hasil'] = round($hasil, 3);
 		$this->load->view('backend/standart/administrator/audit_tasks/audit_hasil', $data);
 	}
 }

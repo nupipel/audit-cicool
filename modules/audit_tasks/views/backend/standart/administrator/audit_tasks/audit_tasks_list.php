@@ -197,6 +197,8 @@
                                           <p class="help-block">(Batas waktu perbaikan : <?= $audit_tasks->batas_waktu_perbaikan; ?>)</p>
                                        <?php } else if ($audit_tasks->status == "review_perbaikan") { ?>
                                           <p class="help-block">(Tindakan perbaikan telah dilakukan)</p>
+                                       <?php } else if ($audit_tasks->status == "done") { ?>
+                                          <p class="help-block">(Selesai)</p>
                                        <?php } else { ?>
                                           <span class="text-danger">Belum di audit</span>
                                        <?php } ?>
