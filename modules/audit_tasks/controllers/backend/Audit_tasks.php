@@ -763,6 +763,36 @@ class Audit_tasks extends Admin
 		];
 		$this->render('backend/standart/administrator/audit_tasks/audit_review_perbaikan', $data);
 	}
+
+	function audit_hasil($id_task)
+	{
+		$data = [
+			'id_task' 	=> $id_task,
+			'audit_task' 	=> $this->model_audit_tasks->find($id_task),
+			'hasil_audits'	=> $this->model_audit_tasks->getHasilAudit($id_task),
+			'tidak_berlaku'		=> $this->model_audit_tasks->auditTidakBerlaku($id_task),
+			'ketidak_sesuaian'	=> $this->model_audit_tasks->auditKetidakSesuaian($id_task),
+			'observasi'			=> $this->model_audit_tasks->auditObservasi($id_task),
+
+			'lingkup'	=> $this->db->select('b.section')->from('lingkup_audit a')->join('departemen b', 'b.id = a.id_departemen')->where('a.id_task', $id_task)->get()->result(),
+			'lead'	=> $this->db->select('b.full_name')->from('audit_tasks a')->join('aauth_users b', 'b.id = a.lead', 'left')->where('a.id', $id_task)->get()->row(),
+			'member1'	=> $this->db->select('b.full_name')->from('audit_tasks a')->join('aauth_users b', 'b.id = a.member1', 'left')->where('a.id', $id_task)->get()->row(),
+			'member2'	=> $this->db->select('b.full_name')->from('audit_tasks a')->join('aauth_users b', 'b.id = a.member2', 'left')->where('a.id', $id_task)->get()->row(),
+
+			'jadwal'	=>  $this->db->select('b.*')->from('audit_tasks a')->join('jadwal b', 'b.id_task = a.id')->where('b.id_task', $id_task)->get()->result(),
+
+			'minor'	=> $this->db->select('count(ap.id_kriteria) as total')->from('kriteria_ketidaksesuaian kk')->join("(select * from audit_pemenuhan where id_task = $id_task) ap", 'ap.id_kriteria = kk.id_kriteria', 'left')->where(['kk.id_task' => $id_task, 'ap.pemenuhan' => 'minor'])->get()->row(),
+			'major'	=> $this->db->select('count(ap.id_kriteria) as total')->from('kriteria_ketidaksesuaian kk')->join("(select * from audit_pemenuhan where id_task = $id_task) ap", 'ap.id_kriteria = kk.id_kriteria', 'left')->where(['kk.id_task' => $id_task, 'ap.pemenuhan' => 'major'])->get()->row(),
+		];
+		$up = ((count($data['hasil_audits']) - count($data['tidak_berlaku'])) - count($data['ketidak_sesuaian']));
+
+		$down = count($data['hasil_audits']) - count($data['tidak_berlaku']);
+
+		$hasil = ($up / $down) / 100;
+
+		$data['hasil'] = $hasil;
+		$this->load->view('backend/standart/administrator/audit_tasks/audit_hasil', $data);
+	}
 }
 
 

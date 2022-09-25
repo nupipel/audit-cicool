@@ -211,7 +211,7 @@
                                        <?php } else if ($audit_tasks->status == "review_perbaikan") { ?>
                                           <a href="<?= site_url('administrator/audit_tasks/audit_review_perbaikan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-success"><i class="fa fa-check-square-o"></i> Review Perbaikan</a>
                                        <?php } else if ($audit_tasks->status == "done") { ?>
-                                          <a href="<?= site_url('administrator/audit_tasks/audit_hasil/' . $audit_tasks->id); ?>" class="btn btn-sm btn-primary"><i class="fa fa-check-square-o"></i> Cek Hasil Audit</a>
+                                          <a href="<?= site_url('administrator/audit_tasks/audit_hasil/' . $audit_tasks->id); ?>" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-check-square-o"></i> Cek Hasil Audit</a>
                                        <?php } ?>
                                        <br>
 
