@@ -56,7 +56,6 @@
                         <div class="form-horizontal form-step" name="form_audit_tasks" id="form_audit_tasks">
                             <div class="container">
                                 <div class="form-group ">
-                                    <h4>Batas waktu perbaikan : <span class="text-danger"><?= $audit_task->batas_waktu; ?></span></h4>
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered">
                                             <thead class="bg-info">
@@ -66,15 +65,16 @@
                                                     <th scope="col" rowspan="3">Kriteria</th>
                                                     <th scope="col" rowspan="3">Tidak Berlaku</th>
                                                     <th scope="col" colspan="4">Pemenuhannya</th>
+
                                                 </tr>
                                                 <tr>
-                                                    <th rowspan="2">sesuai</th>
+                                                    <th rowspan="2">Sesuai</th>
                                                     <th colspan="2">Ketidaksesuaian</th>
-                                                    <th rowspan="2">observasi</th>
+                                                    <th rowspan="2">Observasi</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>major</th>
-                                                    <th>minor</th>
+                                                    <th>Major</th>
+                                                    <th>Minor</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -82,27 +82,23 @@
                                                 foreach ($hasil_audits as $audit) : ?>
                                                     <tr>
                                                         <td class="text-center"><?= $no; ?></td>
-                                                        <td class="text-right"><?= $audit->no_kriteria; ?></td>
-                                                        <td><?= $audit->kriteria; ?></td>
-                                                        <?php if (substr_count($audit->no_kriteria, ".") > 1) : ?>
-                                                            <td class="text-center">
-                                                                <?= $audit->pemenuhan == 'tidak_berlaku' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <?= $audit->pemenuhan == 'sesuai' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <?= $audit->pemenuhan == 'major' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <?= $audit->pemenuhan == 'minor' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <?= $audit->pemenuhan == 'observasi' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                            </td>
-                                                        <?php else : ?>
-                                                            <td colspan="5"></td>
-                                                        <?php endif; ?>
+                                                        <td class="text-right"><?= $audit->id_kriteria; ?></td>
+                                                        <td><?= $audit->kriteria_audit; ?></td>
+                                                        <td class="text-center">
+                                                            <?= $audit->pemenuhan == 'tidak_berlaku' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?= $audit->pemenuhan == 'sesuai' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?= $audit->pemenuhan == 'major' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?= $audit->pemenuhan == 'minor' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?= $audit->pemenuhan == 'observasi' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php $no++;
                                                 endforeach; ?>
@@ -123,8 +119,8 @@
                                     </tr>
                                     <?php foreach ($tidak_berlaku as $tb) : ?>
                                         <tr>
-                                            <td><?= $tb->no_kriteria; ?></td>
-                                            <th><?= $tb->kriteria; ?></th>
+                                            <td><?= $tb->id_kriteria; ?></td>
+                                            <th><?= $tb->kriteria_audit; ?></th>
                                             <td><?= $tb->penjelasan; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -139,29 +135,30 @@
                                             <tr class="bg-warning">
                                                 <th>No kriteria</th>
                                                 <th>Kriteria</th>
-                                                <th>Bukti Objektif</th>
                                                 <th>Kategori</th>
                                                 <th width="500">Tindak lanjut (perbaikan ketidak sesuaian)</th>
                                             </tr>
                                             <?php foreach ($ketidak_sesuaian as $tb) : ?>
                                                 <tr>
-                                                    <td><?= $tb->no_kriteria; ?></td>
-                                                    <th><?= $tb->kriteria; ?></th>
-                                                    <td><?= $tb->bukti_objektif; ?></td>
+                                                    <td><?= $tb->id_kriteria; ?></td>
+                                                    <th><?= $tb->kriteria_audit; ?></th>
                                                     <td><?= $tb->pemenuhan; ?></td>
                                                     <td>
                                                         <div class="panel panel-danger">
                                                             <div class="panel-body">
-                                                                <label for="penyebab_<?= $tb->id; ?>">Penyebab ketidak sesuaian</label>
-                                                                <textarea id="penyebab_<?= $tb->id; ?>" name="penyebab_<?= $tb->id; ?>" rows="3" class="textarea form-control"></textarea>
+                                                                <p><b>Penyebab Ketidaksesuaian : </b> <br><?= $tb->penyebab; ?></p>
                                                             </div>
                                                         </div>
                                                         <div class="panel panel-success">
                                                             <div class="panel-body">
-                                                                <label for="tindakan_<?= $tb->id; ?>">Tindakan korektif</label>
-                                                                <textarea id="tindakan_<?= $tb->id; ?>" name="tindakan_<?= $tb->id; ?>" rows="3" class="textarea form-control"></textarea>
+                                                                <label for="tindakan_<?= $tb->id_kriteria; ?>">Tindakan korektif</label>
+                                                                <textarea id="tindakan_<?= $tb->id_kriteria; ?>" name="tindakan_<?= $tb->id_kriteria; ?>" rows="3" class="textarea form-control"></textarea>
+                                                                <br>
+                                                                <label for="waktu_<?= $tb->id_kriteria; ?>">Target waktu selesai</label>
+                                                                <input type="text" id="waktu_<?= $tb->id_kriteria; ?>" name="waktu_<?= $tb->id_kriteria; ?>" class="datepicker form-control" />
                                                             </div>
                                                         </div>
+
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -180,21 +177,21 @@
                                             <th>No kriteria</th>
                                             <th>Kriteria</th>
                                             <th>Bukti Objektif</th>
-                                            <th width="500">Rekomendasi</th>
+                                            <!-- <th width="500">Rekomendasi</th> -->
                                         </tr>
                                         <?php foreach ($observasi as $tb) : ?>
                                             <tr>
-                                                <td><?= $tb->no_kriteria; ?></td>
-                                                <th><?= $tb->kriteria; ?></th>
+                                                <td><?= $tb->id_kriteria; ?></td>
+                                                <th><?= $tb->kriteria_audit; ?></th>
                                                 <td><?= $tb->bukti_objektif; ?></td>
-                                                <td>
+                                                <!-- <td>
                                                     <div class="panel panel-info">
                                                         <div class="panel-body">
                                                             <label for="observasi_<?= $tb->id; ?>">Rekomendasi</label>
                                                             <textarea id="observasi_<?= $tb->id; ?>" name="observasi_<?= $tb->id; ?>" rows="3" class="textarea form-control"></textarea>
                                                         </div>
                                                     </div>
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         <?php endforeach; ?>
                                     </form>
@@ -259,20 +256,19 @@
             const save_type = $(this).attr('data-stype');
 
             const ketidak_sesuaian = $('#ketidak_sesuaian').serializeArray();
-            const observasi = $('#observasi').serializeArray();
-
             $.each(ketidak_sesuaian, function() {
                 data_post.push({
                     name: this.name,
                     value: this.value
                 });
             });
-            $.each(observasi, function() {
-                data_post.push({
-                    name: this.name,
-                    value: this.value
-                });
-            });
+            // const observasi = $('#observasi').serializeArray();
+            // $.each(observasi, function() {
+            //     data_post.push({
+            //         name: this.name,
+            //         value: this.value
+            //     });
+            // });
             data_post.push({
                 name: [csrfName],
                 value: csrfHash,

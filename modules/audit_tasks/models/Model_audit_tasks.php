@@ -121,46 +121,27 @@ class Model_audit_tasks extends MY_Model
     function getHasilAudit($id_task)
     {
         // select ka.no_kriteria, ka.kriteria, ap.pemenuhan  from audit_pemenuhan ap left join kriteria_audit ka on ka.id = ap.id_kriteria where ap.id_task = 2
-        $query = $this->db->select('ka.no_kriteria, ka.kriteria, ap.pemenuhan')->from('audit_pemenuhan ap')->join('kriteria_audit ka', 'ka.id = ap.id_kriteria', 'left')->where('ap.id_task', $id_task)->order_by("INET_ATON(ka.no_kriteria)");
+        $query = $this->db->select('ka.kriteria_audit,ap.id_kriteria, ap.pemenuhan')->from('audit_pemenuhan ap')->join('master_kriteria_audit ka', 'ka.id = ap.id_kriteria', 'left')->where('ap.id_task', $id_task)->order_by("INET_ATON(ap.id_kriteria)");
 
         return $query->get()->result();
     }
     function auditTidakBerlaku($id_task)
     {
         // select ka.no_kriteria, ka.kriteria, ktb.penjelasan  from kriteria_tidak_berlaku ktb left join kriteria_audit ka on ka.id = ktb.id_kriteria where ktb.id_task = 3
-        $query = $this->db->select('ka.no_kriteria, ka.kriteria, ktb.penjelasan')->from('kriteria_tidak_berlaku ktb')->join('kriteria_audit ka', 'ka.id = ktb.id_kriteria', 'left')->where('ktb.id_task', $id_task)->order_by("INET_ATON(ka.no_kriteria)");
+        $query = $this->db->select('ktb.id_kriteria, ka.kriteria_audit, ktb.penjelasan')->from('kriteria_tidak_berlaku ktb')->join('master_kriteria_audit ka', 'ka.id = ktb.id_kriteria', 'left')->where('ktb.id_task', $id_task)->order_by("INET_ATON(ktb.id_kriteria)");
 
         return $query->get()->result();
     }
     function auditKetidakSesuaian($id_task)
     {
-        //     select
-        //     ka.no_kriteria ,
-        //     ka.kriteria ,
-        //     kk.bukti_objektif ,
-        //     ap.pemenuhan
-        // from
-        //     kriteria_ketidaksesuaian kk
-        // left join (
-        //     select
-        //         *
-        //     from
-        //         audit_pemenuhan
-        //     where
-        //         id_task = 3) ap on
-        //     ap.id_kriteria = kk.id_kriteria
-        // left join kriteria_audit ka on
-        //     ka.id = kk.id_kriteria
-        // where
-        //     kk.id_task = 3    
-        $query = $this->db->select('kk.id,ka.no_kriteria, ka.kriteria, kk.bukti_objektif, ap.pemenuhan, kk.penyebab, kk.tindakan')->from('kriteria_ketidaksesuaian kk')->join("(select * from audit_pemenuhan where id_task = $id_task) ap", 'ap.id_kriteria = kk.id_kriteria', 'left')->join('kriteria_audit ka', 'ka.id = kk.id_kriteria', 'left')->where('kk.id_task', $id_task)->order_by("INET_ATON(ka.no_kriteria)");
+        $query = $this->db->select('kk.*, ka.kriteria_audit, ap.pemenuhan')->from('kriteria_ketidaksesuaian kk')->join("(select * from audit_pemenuhan where id_task = $id_task) ap", 'ap.id_kriteria = kk.id_kriteria', 'left')->join('master_kriteria_audit ka', 'ka.id = kk.id_kriteria', 'left')->where('kk.id_task', $id_task)->order_by("INET_ATON(kk.id_kriteria)");
 
         return $query->get()->result();
     }
     function auditObservasi($id_task)
     {
         // select ka.no_kriteria, ka.kriteria, ko.bukti_objektif from kriteria_observasi ko left join kriteria_audit ka on ka.id = ko.id_kriteria where ko.id_task = 3
-        $query = $this->db->select('ko.id,ka.no_kriteria, ka.kriteria, ko.bukti_objektif, ko.rekomendasi')->from('kriteria_observasi ko')->join('kriteria_audit ka', 'ka.id = ko.id_kriteria', 'left')->where('ko.id_task', $id_task)->order_by("INET_ATON(ka.no_kriteria)");
+        $query = $this->db->select('ko.*, ka.kriteria_audit')->from('kriteria_observasi ko')->join('master_kriteria_audit ka', 'ka.id = ko.id_kriteria', 'left')->where('ko.id_task', $id_task)->order_by("INET_ATON(ko.id_kriteria)");
 
         return $query->get()->result();
     }

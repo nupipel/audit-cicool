@@ -56,9 +56,7 @@
                         <div class="form-horizontal form-step" name="form_audit_tasks" id="form_audit_tasks">
                             <div class="container">
                                 <div class="form-group ">
-                                    <?php if ($audit_task->status == "2") : ?>
-                                        <h4>Batas waktu perbaikan : <span class="text-danger"><?= $audit_task->batas_waktu; ?></span></h4>
-                                    <?php endif; ?>
+
                                     <table class="table table-hover table-bordered">
                                         <thead class="bg-info">
                                             <tr>
@@ -67,15 +65,16 @@
                                                 <th scope="col" rowspan="3">Kriteria</th>
                                                 <th scope="col" rowspan="3">Tidak Berlaku</th>
                                                 <th scope="col" colspan="4">Pemenuhannya</th>
+
                                             </tr>
                                             <tr>
-                                                <th rowspan="2">sesuai</th>
+                                                <th rowspan="2">Sesuai</th>
                                                 <th colspan="2">Ketidaksesuaian</th>
-                                                <th rowspan="2">observasi</th>
+                                                <th rowspan="2">Observasi</th>
                                             </tr>
                                             <tr>
-                                                <th>major</th>
-                                                <th>minor</th>
+                                                <th>Major</th>
+                                                <th>Minor</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -83,27 +82,23 @@
                                             foreach ($hasil_audits as $audit) : ?>
                                                 <tr>
                                                     <td class="text-center"><?= $no; ?></td>
-                                                    <td class="text-right"><?= $audit->no_kriteria; ?></td>
-                                                    <td><?= $audit->kriteria; ?></td>
-                                                    <?php if (substr_count($audit->no_kriteria, ".") > 1) : ?>
-                                                        <td class="text-center">
-                                                            <?= $audit->pemenuhan == 'tidak_berlaku' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <?= $audit->pemenuhan == 'sesuai' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <?= $audit->pemenuhan == 'major' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <?= $audit->pemenuhan == 'minor' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <?= $audit->pemenuhan == 'observasi' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
-                                                        </td>
-                                                    <?php else : ?>
-                                                        <td colspan="5"></td>
-                                                    <?php endif; ?>
+                                                    <td class="text-right"><?= $audit->id_kriteria; ?></td>
+                                                    <td><?= $audit->kriteria_audit; ?></td>
+                                                    <td class="text-center">
+                                                        <?= $audit->pemenuhan == 'tidak_berlaku' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= $audit->pemenuhan == 'sesuai' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= $audit->pemenuhan == 'major' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= $audit->pemenuhan == 'minor' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= $audit->pemenuhan == 'observasi' ? '<i class="fa fa-check-square-o"></i>' : ''; ?>
+                                                    </td>
                                                 </tr>
                                             <?php $no++;
                                             endforeach; ?>
@@ -123,8 +118,8 @@
                                     </tr>
                                     <?php foreach ($tidak_berlaku as $tb) : ?>
                                         <tr>
-                                            <td><?= $tb->no_kriteria; ?></td>
-                                            <th><?= $tb->kriteria; ?></th>
+                                            <td><?= $tb->id_kriteria; ?></td>
+                                            <th><?= $tb->kriteria_audit; ?></th>
                                             <td><?= $tb->penjelasan; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -135,20 +130,34 @@
                                     <h4>TEMUAN KETIDAK SESUAIAN</h4>
                                 </u>
                                 <table class="table table-bordered">
+                                    <!-- <?=
+                                            form_open('', [
+                                                'name' => 'batas_waktu',
+                                                'id' => 'batas_waktu',
+                                                'class' => 'form-horizontal form-step',
+                                                'enctype' => 'multipart/form-data',
+                                                'method' => 'POST'
+                                            ]);
+                                            ?> -->
                                     <tr class="bg-warning">
                                         <th>No kriteria</th>
                                         <th>Kriteria</th>
-                                        <th>Bukti Objektif</th>
+                                        <th>Uraian Permasalahan/Ketidaksesuaian</th>
                                         <th>Kategori</th>
+                                        <!-- <th width="300">Target waktu selesai</th> -->
                                     </tr>
                                     <?php foreach ($ketidak_sesuaian as $tb) : ?>
                                         <tr>
-                                            <td><?= $tb->no_kriteria; ?></td>
-                                            <th><?= $tb->kriteria; ?></th>
-                                            <td><?= $tb->bukti_objektif; ?></td>
+                                            <td><?= $tb->id_kriteria; ?></td>
+                                            <th><?= $tb->kriteria_audit; ?></th>
+                                            <td><?= $tb->penyebab; ?></td>
                                             <td><?= $tb->pemenuhan; ?></td>
+                                            <!-- <td>
+                                                <input type="text" class="form-control datepicker" id="tidak_sesuai_<?= $tb->id_kriteria; ?>" name="tidak_sesuai_<?= $tb->id_kriteria; ?>" />
+                                            </td> -->
                                         </tr>
                                     <?php endforeach; ?>
+                                    <!-- <?= form_close(); ?> -->
                                 </table>
 
                                 <hr>
@@ -162,12 +171,14 @@
                                         <th>No kriteria</th>
                                         <th>Kriteria</th>
                                         <th>Bukti Objektif</th>
+                                        <th>Catatan</th>
                                     </tr>
                                     <?php foreach ($observasi as $tb) : ?>
                                         <tr>
-                                            <td><?= $tb->no_kriteria; ?></td>
-                                            <th><?= $tb->kriteria; ?></th>
+                                            <td><?= $tb->id_kriteria; ?></td>
+                                            <th><?= $tb->kriteria_audit; ?></th>
                                             <td><?= $tb->bukti_objektif; ?></td>
+                                            <td><?= $tb->catatan; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </table>
@@ -188,7 +199,7 @@
                                     <label for="batas_waktu" class="col-sm-2 control-label">Batas waktu perbaikan<i class="required">*</i>
                                     </label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control datepicker" name="batas_waktu" id="batas_waktu" placeholder="Batas waktu perbaikan" value="<?= set_value('batas_waktu', $audit_task->batas_waktu); ?>">
+                                        <input type="text" class="form-control datepicker" name="batas_waktu" id="batas_waktu" placeholder="Batas waktu perbaikan" value="<?= set_value('batas_waktu', $audit_task->batas_waktu_perbaikan); ?>">
                                         <small class="info help-block">
                                         </small>
                                     </div>
@@ -225,8 +236,6 @@
                                     </div>
                                 </div>
                                 <hr>
-
-
                             </div>
                         </div>
                     </div>
@@ -279,7 +288,7 @@
                             message: res.message
                         });
                         $('.message').fadeIn();
-                        location.reload(true);
+                        // location.reload(true);
                     } else {
                         if (res.errors) {
 

@@ -191,25 +191,27 @@
                                     <td><span class="list_group-member1"><?= _ent(get_user($audit_tasks->member1)->full_name); ?></span></td>
                                     <td><span class="list_group-member2"><?= _ent(get_user($audit_tasks->member2)->full_name); ?></span></td>
                                     <td>
-                                       <?php if ($audit_tasks->status == 1) { ?>
-                                          <span class="text-info"> Telah di audit </span>
-                                       <?php } else if ($audit_tasks->status == 2) { ?>
-                                          <p class="help-block"><b>Batas waktu perbaikan :</b> <span class="text-danger"><?= $audit_tasks->batas_waktu; ?></span></p>
-                                       <?php } else if ($audit_tasks->status == 3) { ?>
-                                          <p class="help-block"><b>Perbaikan telah dilakukan pada :</b> <span class="text-danger"><?= $audit_tasks->waktu_perbaikan; ?></span></p>
+                                       <?php if ($audit_tasks->status == "review") { ?>
+                                          <p class="help-block">(Audit telah dilakukan)</p>
+                                       <?php } else if ($audit_tasks->status == 'perbaikan') { ?>
+                                          <p class="help-block">(Batas waktu perbaikan : <?= $audit_tasks->batas_waktu_perbaikan; ?>)</p>
+                                       <?php } else if ($audit_tasks->status == "review_perbaikan") { ?>
+                                          <p class="help-block">(Tindakan perbaikan telah dilakukan)</p>
                                        <?php } else { ?>
-                                          <span class="text-danger"> Belum di audit </span>
+                                          <span class="text-danger">Belum di audit</span>
                                        <?php } ?>
                                     </td>
                                     <td>
-                                       <?php if ($audit_tasks->status == 0) { ?>
+                                       <?php if ($audit_tasks->status == "0") { ?>
                                           <a href="<?= site_url('administrator/audit_tasks/audit_pemenuhan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-success"><i class="fa fa-check-square-o"></i> Audit</a>
-                                       <?php } else if ($audit_tasks->status == 1) { ?>
+                                       <?php } else if ($audit_tasks->status == "review") { ?>
                                           <a href="<?= site_url('administrator/audit_tasks/review_audit/' . $audit_tasks->id); ?>" class="btn btn-sm btn-info"><i class="fa fa-check-square-o"></i> Review</a>
-                                       <?php } else if ($audit_tasks->status == 2) { ?>
+                                       <?php } else if ($audit_tasks->status == "perbaikan") { ?>
                                           <a href="<?= site_url('administrator/audit_tasks/audit_perbaikan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-warning"><i class="fa fa-check-square-o"></i> Perbaikan</a>
-                                       <?php } else if ($audit_tasks->status == 3) { ?>
+                                       <?php } else if ($audit_tasks->status == "review_perbaikan") { ?>
                                           <a href="<?= site_url('administrator/audit_tasks/audit_review_perbaikan/' . $audit_tasks->id); ?>" class="btn btn-sm btn-success"><i class="fa fa-check-square-o"></i> Review Perbaikan</a>
+                                       <?php } else if ($audit_tasks->status == "done") { ?>
+                                          <a href="<?= site_url('administrator/audit_tasks/audit_hasil/' . $audit_tasks->id); ?>" class="btn btn-sm btn-primary"><i class="fa fa-check-square-o"></i> Cek Hasil Audit</a>
                                        <?php } ?>
                                        <br>
 

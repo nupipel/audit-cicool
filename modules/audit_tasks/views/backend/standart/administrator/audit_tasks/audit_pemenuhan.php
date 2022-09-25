@@ -61,20 +61,19 @@
                                             <tr>
                                                 <th scope="col" rowspan="3">No</th>
                                                 <th scope="col" rowspan="3">No Kriteria</th>
-                                                <th scope="col" rowspan="3">ID</th>
-                                                <th scope="col" rowspan="3">Interpretasi Kriteria</th>
+                                                <th scope="col" rowspan="3">Kriteria</th>
                                                 <th scope="col" rowspan="3">Tidak Berlaku</th>
                                                 <th scope="col" colspan="4">Pemenuhannya</th>
 
                                             </tr>
                                             <tr>
-                                                <th rowspan="2">sesuai</th>
+                                                <th rowspan="2">Sesuai</th>
                                                 <th colspan="2">Ketidaksesuaian</th>
-                                                <th rowspan="2">observasi</th>
+                                                <th rowspan="2">Observasi</th>
                                             </tr>
                                             <tr>
-                                                <th>major</th>
-                                                <th>minor</th>
+                                                <th>Major</th>
+                                                <th>Minor</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -85,26 +84,25 @@
                                                 'method' => 'POST'
                                             ]); ?>
                                             <?php $no = 1;
-                                            foreach (db_get_all_data('master_interpretasi_kriteria_audit') as $audit) : ?>
+                                            foreach (db_get_all_data('master_kriteria_audit', false, 'abs(id_subklausul),INET_ATON(id)') as $audit) : ?>
                                                 <tr>
                                                     <td class="text-center"><?= $no; ?></td>
-                                                    <td class="text-right"><?= $audit->id_kriteria; ?></td>
                                                     <td class="text-center"><?= $audit->id; ?></td>
-                                                    <td><?= $audit->interpretasi_kriteria; ?></td>
+                                                    <td><?= $audit->kriteria_audit; ?></td>
                                                     <td class="text-center">
-                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="tidak_berlaku">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->kriteria_audit ?>" value="tidak_berlaku">
                                                     </td>
                                                     <td class="text-center">
                                                         <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" value="sesuai">
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="major">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->kriteria_audit ?>" value="major">
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="minor">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->kriteria_audit ?>" value="minor">
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->interpretasi_kriteria ?>" value="observasi">
+                                                        <input type="radio" name="radio_<?= _ent($audit->id) ?>" data-id="<?= $audit->id; ?>" data-no="<?= $audit->id; ?>" data-value="<?= $audit->kriteria_audit ?>" value="observasi">
                                                     </td>
                                                 </tr>
                                             <?php $no++;
@@ -265,8 +263,11 @@
                 html += '<p>Kriteria ' + data_no + ' : ';
                 html += '<b> "' + data_value + '"</b></p>';
                 htmlModal = html;
-                htmlModal += '<textarea id="' + targetClass + '" onchange="bindingValue(this.id, this.value)" rows="4" class="textarea form-control" placeholder="Bukti Objektif"></textarea></div>';
-                html += '<textarea name="' + targetClass + '" rows="4" class="textarea form-control" placeholder="Bukti Objektif"></textarea></div>';
+
+                htmlModal += '<label for="bukti_' + targetClass + '">Bukti objektif :</label><textarea id="bukti_' + targetClass + '" onchange="bindingValue(this.id, this.value)" rows="4" class="textarea form-control" placeholder="Bukti Objektif"></textarea><br>';
+                htmlModal += '<label>Uraian Permasalahan/Ketidaksesuaian :</label><textarea id="' + targetClass + '" onchange="bindingValue(this.id, this.value)" rows="4" class="textarea form-control" placeholder="Uraian Permasalahan/Ketidaksesuaian"></textarea></div>';
+                html += '<label>Bukti objektif :</label><textarea name="bukti_' + targetClass + '" rows="4" class="textarea form-control" placeholder="Bukti Objektif"></textarea><br>';
+                html += '<label>Uraian Permasalahan/Ketidaksesuaian :</label><textarea name="' + targetClass + '" rows="4" class="textarea form-control" placeholder="Uraian Permasalahan/Ketidaksesuaian"></textarea></div>';
 
                 target.append(html);
                 modal.append(htmlModal);
@@ -283,8 +284,10 @@
                 html += '<p>Kriteria ' + data_no + ' : ';
                 html += '<b> "' + data_value + '"</b></p>';
                 htmlModal = html;
-                htmlModal += '<textarea id="' + targetClass + '" onchange="bindingValue(this.id, this.value)" rows="4" class="textarea form-control" placeholder="Observasi"></textarea></div>';
-                html += '<textarea name="' + targetClass + '" rows="4" class="textarea form-control" placeholder="Observasi"></textarea></div>';
+                htmlModal += '<label for="bukti_' + targetClass + '">Bukti objektif :</label><textarea id="bukti_' + targetClass + '" onchange="bindingValue(this.id, this.value)" rows="4" class="textarea form-control" placeholder="Bukti Objektif"></textarea><br>';
+                htmlModal += '<label>Catatan :</label><textarea id="' + targetClass + '" onchange="bindingValue(this.id, this.value)" rows="4" class="textarea form-control" placeholder="Catatan"></textarea></div>';
+                html += '<label>Bukti objektif :</label><textarea name="bukti_' + targetClass + '" rows="4" class="textarea form-control" placeholder="Bukti Objektif"></textarea><br>';
+                html += '<label>Catatan :</label><textarea name="' + targetClass + '" rows="4" class="textarea form-control" placeholder="Catatan"></textarea></div>';
 
                 target.append(html);
                 modal.append(htmlModal);

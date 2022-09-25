@@ -130,6 +130,8 @@ class Audit_tasks extends Admin
 				'lead' => $this->input->post('lead'),
 				'member1' => $this->input->post('member1'),
 				'member2' => $this->input->post('member2'),
+				'created_by' => $this->session->userdata('username'),
+				'created_at' => date('Y-m-d H:i:s'),
 			];
 
 			$save_audit_tasks = $id = $this->model_audit_tasks->store($audit_task);
@@ -308,6 +310,8 @@ class Audit_tasks extends Admin
 				'lead' => $this->input->post('lead'),
 				'member1' => $this->input->post('member1'),
 				'member2' => $this->input->post('member2'),
+				'created_by' => $this->session->userdata('username'),
+				'created_at' => date('Y-m-d H:i:s'),
 			];
 
 
@@ -497,11 +501,10 @@ class Audit_tasks extends Admin
 	function save_audit_pemenuhan()
 	{
 
-		$audit_master = $this->db->get('master_interpretasi_kriteria_audit')->result();
+		$audit_master = $this->db->select('id')->get('master_kriteria_audit')->result();
 
 		$datas = $this->input->post();
 
-		// var_dump($datas);
 		$penjelasan = [];
 		$ketidaksesuaian = [];
 		$observasi = [];
@@ -511,29 +514,45 @@ class Audit_tasks extends Admin
 					'id_task'		=> $this->input->post('id_task'),
 					'id_kriteria' 	=> str_replace("_", ".", substr($key, 11)),
 					'penjelasan'	=> $data,
+					'auditor'		=> $this->session->userdata('username')
 				]);
 			}
 			if (substr($key, 0, 13) == "tidak_sesuai_") {
 				array_push($ketidaksesuaian, [
 					'id_task'			=> $this->input->post('id_task'),
 					'id_kriteria' 		=> str_replace("_", ".", substr($key, 13)),
+					'bukti_objektif'	=> $this->input->post('bukti_tidak_sesuai_' . substr($key, 13)),
 					'penyebab'			=> $data,
-					'status'			=> "open"
+					'auditor'			=> $this->session->userdata('username')
 				]);
 			}
 			if (substr($key, 0, 10) == "observasi_") {
 				array_push($observasi, [
 					'id_task'			=> $this->input->post('id_task'),
 					'id_kriteria' 		=> str_replace("_", ".", substr($key, 10)),
-					'bukti_objektif'	=> $data,
-					'status'			=> "open"
+					'bukti_objektif'	=> $this->input->post('bukti_observasi_' . substr($key, 10)),
+					'catatan'			=> $data,
+					'auditor'			=> $this->session->userdata('username')
 				]);
 			}
 		}
 
-		$save_data_kriteria_tidak_berlaku = $this->db->insert_batch('kriteria_tidak_berlaku', $penjelasan);
-		$save_data_ketidaksesuaian = $this->db->insert_batch('kriteria_ketidaksesuaian', $ketidaksesuaian);
-		$save_data_observasi = $this->db->insert_batch('kriteria_observasi', $observasi);
+		// var_dump($penjelasan);
+		// var_dump($ketidaksesuaian);
+		// var_dump($observasi);
+		// die;
+
+
+		if ($ketidaksesuaian) {
+			$save_data_ketidaksesuaian = $this->db->insert_batch('kriteria_ketidaksesuaian', $ketidaksesuaian);
+		}
+		if ($observasi) {
+			$save_data_observasi = $this->db->insert_batch('kriteria_observasi', $observasi);
+		}
+		if ($penjelasan) {
+			$save_data_kriteria_tidak_berlaku = $this->db->insert_batch('kriteria_tidak_berlaku', $penjelasan);
+		}
+
 
 		$audit_pemenuhan = [];
 		foreach ($audit_master as $audit) {
@@ -548,12 +567,13 @@ class Audit_tasks extends Admin
 			}
 		}
 
+
 		$save_data_audit_pemenuhan = $this->db->insert_batch('audit_pemenuhan', $audit_pemenuhan);
 
 		if ($save_data_audit_pemenuhan) {
 			// UPDATE STATUS AUDIT TASK 
 			$IDTASK =  $this->input->post('id_task');
-			$this->db->update('audit_tasks', ['status' => 1], ['id' => $IDTASK]);
+			$this->db->update('audit_tasks', ['status' => 'review'], ['id' => $IDTASK]);
 
 
 			if ($this->input->post('save_type') == 'stay') {
@@ -619,51 +639,58 @@ class Audit_tasks extends Admin
 	function save_batas_waktu_perbaikan()
 	{
 		$id_task = $this->input->post('id_task');
-		$this->form_validation->set_rules('batas_waktu', 'Batas Waktu', 'trim');
+		// $datas = $this->input->post();
+		// $batas_waktu = [];
+		// foreach ($datas as $key => $data) {
+		// 	if (substr($key, 0, 13) == "tidak_sesuai_") {
+		// 		array_push($batas_waktu, [
+		// 			'id_kriteria' 			=> str_replace("_", ".", substr($key, 13)),
+		// 			'batas_waktu_perbaikan'	=> $data,
+		// 			'status'				=> 'open',
+		// 		]);
+		// 	}
+		// }
 
-		if ($this->form_validation->run()) {
-			$waktu = $this->input->post('batas_waktu');
-			$data = [
-				'batas_waktu'	=> $waktu ? $waktu : null,
-				'status'		=> $waktu ? 2 : 1,
-			];
+		// $this->db->where('id_task', $id_task);
+		// $update_data_audit_tasks = $this->db->update_batch('kriteria_ketidaksesuaian', $batas_waktu, 'id_kriteria');
 
-			$update_data_audit_tasks = $this->db->update('audit_tasks', $data, ['id' => $id_task]);
 
-			if ($update_data_audit_tasks) {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = true;
-					$this->data['id'] 	   = $update_data_audit_tasks;
-					$this->data['message'] = cclang('success_save_data_stay', [
-						// anchor('administrator/audit_tasks/edit/' . $update_data_audit_tasks, 'Edit Audit Tasks'),
-						// anchor('administrator/audit_tasks', ' Go back to list')
-					]);
-				} else {
-					set_message(
-						cclang('success_save_data_redirect', [
-							// anchor('administrator/audit_tasks/edit/' . $update_data_audit_tasks, 'Edit Audit Tasks')
-						]),
-						'success'
-					);
+		$update_data_audit_tasks = $this->db->update('audit_tasks', ['status' => "perbaikan", 'batas_waktu_perbaikan' => $this->input->post('batas_waktu')], ['id' => $id_task]);
 
-					$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/audit_tasks');
-				}
+		if ($update_data_audit_tasks) {
+			// update status audit_tasks
+			// $this->db->update('audit_tasks', ['status' => 'open'], ['id' => $id_task]);
+
+
+			if ($this->input->post('save_type') == 'stay') {
+				$this->data['success'] = true;
+				$this->data['id'] 	   = $update_data_audit_tasks;
+				$this->data['message'] = cclang('success_save_data_stay', [
+					// anchor('administrator/audit_tasks/edit/' . $update_data_audit_tasks, 'Edit Audit Tasks'),
+					// anchor('administrator/audit_tasks', ' Go back to list')
+				]);
 			} else {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = false;
-					$this->data['message'] = cclang('data_not_change');
-				} else {
-					$this->data['success'] = false;
-					$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/audit_tasks');
-				}
+				set_message(
+					cclang('success_save_data_redirect', [
+						// anchor('administrator/audit_tasks/edit/' . $update_data_audit_tasks, 'Edit Audit Tasks')
+					]),
+					'success'
+				);
+
+				$this->data['success'] = true;
+				$this->data['redirect'] = base_url('administrator/audit_tasks');
 			}
 		} else {
-			$this->data['success'] = false;
-			$this->data['message'] = 'Opss validation failed';
-			$this->data['errors'] = $this->form_validation->error_array();
+			if ($this->input->post('save_type') == 'stay') {
+				$this->data['success'] = false;
+				$this->data['message'] = cclang('data_not_change');
+			} else {
+				$this->data['success'] = false;
+				$this->data['message'] = cclang('data_not_change');
+				$this->data['redirect'] = base_url('administrator/audit_tasks');
+			}
 		}
+
 		$this->response($this->data);
 	}
 
@@ -672,42 +699,25 @@ class Audit_tasks extends Admin
 		$id_task = $this->input->post('id_task');
 		$inputs = $this->input->post();
 
-		$penyebab = [];
-		$tindakan = [];
-
-		$rekomendasi = [];
+		$verifikasi = [];
 
 		foreach ($inputs as $key => $data) {
-			if (substr($key, 0, 9) == "penyebab_") {
-				array_push($penyebab, [
-					'id'		=> substr($key, 9),
-					'penyebab'	=> $data,
-				]);
-			}
-			if (substr($key, 0, 9) == "tindakan_") {
-				array_push($tindakan, [
-					'id'		=> substr($key, 9),
-					'tindakan'	=> $data,
-				]);
-			}
-			if (substr($key, 0, 10) == "observasi_") {
-				array_push($rekomendasi, [
-					'id'		=> substr($key, 10),
-					'rekomendasi'	=> $data,
+
+			if (substr($key, 0, 6) == "verif_") {
+				array_push($verifikasi, [
+					'id_kriteria'		=> str_replace("_", ".", substr($key, 6)),
+					'status'			=> $data,
 				]);
 			}
 		}
-
 		// UPDATE KRITERIA_KETIDAKSESUAIAN 
 
-		$save_penyebab = $this->db->update_batch('kriteria_ketidaksesuaian', $penyebab, 'id');
-		$save_tindakan = $this->db->update_batch('kriteria_ketidaksesuaian', $tindakan, 'id');
-		$save_rekomendasi = $this->db->update_batch('kriteria_observasi', $rekomendasi, 'id');
+		$save_tindakan = $this->db->update_batch('kriteria_ketidaksesuaian', $verifikasi, 'id_kriteria');
 
 
 		if ($save_tindakan) {
 			// update status audit_tasks
-			$this->db->update('audit_tasks', ['status' => 3, 'waktu_perbaikan' => date('Y-m-d H:i:s')], ['id' => $id_task]);
+			$this->db->update('audit_tasks', ['status' => "review_perbaikan"], ['id' => $id_task]);
 
 			if ($this->input->post('save_type') == 'stay') {
 				$this->data['success'] = true;

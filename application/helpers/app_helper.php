@@ -43,11 +43,14 @@ if (!function_exists('redirect_back')) {
 }
 
 if (!function_exists('db_get_all_data')) {
-	function db_get_all_data($table_name = null, $where = false)
+	function db_get_all_data($table_name = null, $where = false, $order = null)
 	{
 		$ci = &get_instance();
 		if ($where) {
 			$ci->db->where($where);
+		}
+		if ($order) {
+			$ci->db->order_by($order);
 		}
 		$query = $ci->db->get($table_name);
 
