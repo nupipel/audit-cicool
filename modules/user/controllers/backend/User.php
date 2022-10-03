@@ -76,6 +76,9 @@ class User extends Admin
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[aauth_users.email]|valid_email');
 		$this->form_validation->set_rules('full_name', 'Full Name', 'trim|required');
+		$this->form_validation->set_rules('jabatan', 'Jabatan', 'trim|required');
+		$this->form_validation->set_rules('unit_kerja', 'Unit Kerja', 'trim');
+		$this->form_validation->set_rules('lokasi_kerja', 'Lokasi Kerja', 'trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
 
 		if ($this->form_validation->run()) {
@@ -85,7 +88,10 @@ class User extends Admin
 			$save_data = [
 				'full_name' 	=> $this->input->post('full_name'),
 				'avatar' 		=> 'default.png',
-				'date_created'	=> date('Y-m-d H:i:s')
+				'date_created'	=> date('Y-m-d H:i:s'),
+				'jabatan' => $this->input->post('jabatan'),
+				'unit_kerja' => $this->input->post('unit_kerja'),
+				'lokasi_kerja' => $this->input->post('lokasi_kerja'),
 			];
 
 			if (!empty($user_avatar_name)) {

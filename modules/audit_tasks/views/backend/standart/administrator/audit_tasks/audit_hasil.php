@@ -29,9 +29,9 @@
     <p style="text-align: center;"><strong>PT ANGKASA PURA I KANTOR CABANG&nbsp;</strong></p>
     <p style="text-align: center;"><strong>BANDARA INTERNASIONAL JENDERAL AHMAD YANI SEMARANG</strong>&nbsp;</p>
     <center>
-        <p><img src="https://audit.hoesa.id/uploads/setting/Screenshot_143.png" alt="" width="60%" height="auto" /></p>
+        <p><img src="/uploads/Screenshot_143.png" alt="" width="60%" height="auto" /></p>
         <p>&nbsp;</p>
-        <p><img src="https://audit.hoesa.id/uploads/setting/Screenshot_144.png" alt="" width="60%" height="auto" /></p>
+        <p><img src="/uploads/Screenshot_144.png" alt="" width="60%" height="auto" /></p>
     </center>
     <p>&nbsp;</p>
     <table border="1" width="100%" style="margin-top:300px">
@@ -40,9 +40,8 @@
                 <td>No.Laporan</td>
                 <td></td>
                 <td rowspan="3">
-                    <p style="text-align: center;">LAPORAN AUDIT INTERNAL</p>
-                    <p style="text-align: center;">SISTEM MANAJEMEN KESELAMATAN DAN KESEHATAN KERJA&nbsp;</p>
-                    <p style="text-align: center;">PT ANGKASA PURA I</p>
+                    <p style="text-align: center;">LAPORAN AUDIT INTERNAL<br/>SISTEM MANAJEMEN KESELAMATAN DAN KESEHATAN KERJA
+                    <br/>PT ANGKASA PURA I</p>
                 </td>
                 <td>Halaman</td>
                 <td></td>

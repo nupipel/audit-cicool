@@ -1,19 +1,21 @@
 <?= get_header(); ?>
+
 <body id="page-top">
    <?= get_navigation(); ?>
 
-     <header>
-      <div class="header-content" >
+   <header>
+      <div class="header-content">
          <div class="header-content-inner">
-            <h1 id="homeHeading">Thanks for buying cicool builder</h1>
+            <h1 id="homeHeading">SIMAK3</h1>
+            <h3>SISTEM INFORMASI MANAJEMEN AUDIT KESELAMATAN DAN KESEHATAN KERJA</h3>
             <hr>
-            <p> you can customize this page by editing this on location <br><code><?=  './cc-content/themes/cicool/view/home.php' ?> </code></p>
-            <a href="https://github.com/ridwanskaterock/cicool/issues" class="btn btn-primary btn-xl page-scroll" target="blank"><i class="fa fa-github"></i> Support</a>
-            <br>
-            <hr>
-            <br>
-            <p>Download modules e-commerce, chat system extension and other on</p>
-            <a href="http://cicool-shoop.go-moment.com/" class="btn btn-primary btn-xl page-scroll" target="blank"><i class="fa fa-puzzle-piece"></i> Cicool Shoop</a>
+
+            <div class="row d-flex">
+               <?php foreach ($logo as $l) : ?>
+                  <img src="<?= BASE_URL . 'uploads/images/' . $l->image ?>" alt="..." style="max-height: 100px">
+               <?php endforeach; ?>
+            </div>
+
          </div>
       </div>
    </header>

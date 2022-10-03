@@ -3,6 +3,10 @@
       background-color: #2ecc71;
       padding: 8px;
    }
+
+   .hovered {
+      cursor: pointer;
+   }
 </style>
 
 <script src="<?= BASE_ASSET; ?>/js/jquery.hotkeys.js"></script>
@@ -96,16 +100,16 @@
                                  <option value=""><?= cclang('all'); ?></option>
                                  <option <?= $this->input->get('f') == 'nama_perusahaan' ? 'selected' : ''; ?> value="nama_perusahaan">Nama Perusahaan</option>
                                  <option <?= $this->input->get('f') == 'kantor_cabang' ? 'selected' : ''; ?> value="kantor_cabang">Kantor Cabang</option>
-                                 <option <?= $this->input->get('f') == 'jenis_industri' ? 'selected' : ''; ?> value="jenis_industri">Jenis Industri</option>
+                                 <!-- <option <?= $this->input->get('f') == 'jenis_industri' ? 'selected' : ''; ?> value="jenis_industri">Jenis Industri</option> -->
                                  <option <?= $this->input->get('f') == 'tanggal' ? 'selected' : ''; ?> value="tanggal">Tanggal</option>
-                                 <option <?= $this->input->get('f') == 'tempat' ? 'selected' : ''; ?> value="tempat">Tempat</option>
+                                 <!-- <option <?= $this->input->get('f') == 'tempat' ? 'selected' : ''; ?> value="tempat">Tempat</option>
                                  <option <?= $this->input->get('f') == 'tujuan' ? 'selected' : ''; ?> value="tujuan">Tujuan</option>
                                  <option <?= $this->input->get('f') == 'proses_produksi' ? 'selected' : ''; ?> value="proses_produksi">Proses Produksi</option>
                                  <option <?= $this->input->get('f') == 'penerapan_k3' ? 'selected' : ''; ?> value="penerapan_k3">Penerapan K3</option>
-                                 <option <?= $this->input->get('f') == 'jadwal' ? 'selected' : ''; ?> value="jadwal">Jadwal</option>
+                                 <option <?= $this->input->get('f') == 'jadwal' ? 'selected' : ''; ?> value="jadwal">Jadwal</option> -->
                                  <option <?= $this->input->get('f') == 'lead' ? 'selected' : ''; ?> value="lead">Lead</option>
-                                 <option <?= $this->input->get('f') == 'member1' ? 'selected' : ''; ?> value="member1">Member1</option>
-                                 <option <?= $this->input->get('f') == 'member2' ? 'selected' : ''; ?> value="member2">Member2</option>
+                                 <!-- <option <?= $this->input->get('f') == 'member1' ? 'selected' : ''; ?> value="member1">Member1</option>
+                                 <option <?= $this->input->get('f') == 'member2' ? 'selected' : ''; ?> value="member2">Member2</option> -->
                               </select>
                            </div>
                            <div class="col-sm-1 padd-left-0 ">
@@ -126,9 +130,8 @@
                         </div>
                      </div>
                      <div class="table-responsive">
-
                         <br>
-                        <table class="table table-bordered dataTable">
+                        <table class="table table-bordered table-hover dataTable">
                            <thead>
                               <tr class="">
                                  <th>
@@ -136,22 +139,23 @@
                                  </th>
                                  <th data-field="nama_perusahaan" data-sort="1" data-primary-key="0"> <?= cclang('nama_perusahaan') ?></th>
                                  <th data-field="kantor_cabang" data-sort="1" data-primary-key="0"> <?= cclang('kantor_cabang') ?></th>
-                                 <th data-field="jenis_industri" data-sort="1" data-primary-key="0"> <?= cclang('jenis_industri') ?></th>
                                  <th data-field="tanggal" data-sort="1" data-primary-key="0"> <?= cclang('tanggal') ?></th>
-                                 <th data-field="tempat" data-sort="1" data-primary-key="0"> <?= cclang('tempat') ?></th>
-                                 <th data-field="tujuan" data-sort="1" data-primary-key="0"> <?= cclang('tujuan') ?></th>
-                                 <th data-field="proses_produksi" data-sort="1" data-primary-key="0"> <?= cclang('proses_produksi') ?></th>
-                                 <th data-field="penerapan_k3" data-sort="1" data-primary-key="0"> <?= cclang('penerapan_k3') ?></th>
-                                 <th data-field="jadwal" data-sort="1" data-primary-key="0"> <?= cclang('jadwal') ?></th>
                                  <th data-field="lead" data-sort="1" data-primary-key="0"> <?= cclang('lead') ?></th>
-                                 <th data-field="member1" data-sort="1" data-primary-key="0"> <?= cclang('member1') ?></th>
-                                 <th data-field="member2" data-sort="1" data-primary-key="0"> <?= cclang('member2') ?></th>
                                  <th data-field="status" data-sort="1" data-primary-key="0"> <?= cclang('status') ?></th>
                                  <th>Action</th>
                               </tr>
                            </thead>
                            <tbody id="tbody_audit_tasks">
-                              <?php foreach ($audit_taskss as $audit_tasks) : ?>
+                              <?php foreach ($audit_taskss as $audit_tasks) :
+                                 $lead = get_user($audit_tasks->lead)->full_name;
+                                 $member1 = get_user($audit_tasks->member1)->full_name;
+                                 $member2 = get_user($audit_tasks->member2)->full_name;
+                              ?>
+                                 <input type="hidden" id="lead_<?= $audit_tasks->id ?>" value="<?= $lead; ?>">
+                                 <input type="hidden" id="member1_<?= $audit_tasks->id ?>" value="<?= $member1; ?>">
+                                 <input type="hidden" id="member2_<?= $audit_tasks->id ?>" value="<?= $member2; ?>">
+
+
                                  <tr>
                                     <td width="5">
                                        <input type="checkbox" class="flat-red check" name="id[]" value="<?= $audit_tasks->id; ?>">
@@ -159,37 +163,9 @@
 
                                     <td><span class="list_group-nama_perusahaan"><?= _ent($audit_tasks->nama_perusahaan); ?></span></td>
                                     <td><span class="list_group-kantor_cabang"><?= _ent($audit_tasks->kantor_cabang); ?></span></td>
-                                    <td><span class="list_group-jenis_industri"><?= _ent($audit_tasks->jenis_industri); ?></span></td>
                                     <td><span class="list_group-tanggal"><?= _ent($audit_tasks->tanggal); ?></span></td>
-                                    <td><span class="list_group-tempat"><?= _ent($audit_tasks->tempat); ?></span></td>
-                                    <td><span class="list_group-tujuan"><?= _ent($audit_tasks->tujuan); ?></span></td>
-                                    <td><span class="list_group-proses_produksi"><?= _ent($audit_tasks->proses_produksi); ?></span></td>
-                                    <td><span class="list_group-penerapan_k3"><?= _ent($audit_tasks->penerapan_k3); ?></span></td>
-                                    <td>
-                                       <table class="table table-sm">
-                                          <thead class="bg-info">
-                                             <th>Kegiatan</th>
-                                             <th>Waktu</th>
-                                             <th>Keterangan</th>
-                                             <th>Penghubung</th>
-                                          </thead>
-                                          <tbody>
-                                             <?php foreach (db_get_all_data('jadwal', ['id_task' => $audit_tasks->id]) as $key => $jadwal) : ?>
-                                                <tr>
-                                                   <th><?= $jadwal->kegiatan; ?></th>
-                                                   <td><?= $jadwal->waktu; ?></td>
-                                                   <td><?= $jadwal->keterangan; ?></td>
-                                                   <td><?= $jadwal->penghubung; ?></td>
-                                                </tr>
-                                             <?php endforeach; ?>
-                                          </tbody>
-                                       </table>
 
-
-                                    </td>
-                                    <td><span class="list_group-lead"><?= _ent(get_user($audit_tasks->lead)->full_name); ?></span></td>
-                                    <td><span class="list_group-member1"><?= _ent(get_user($audit_tasks->member1)->full_name); ?></span></td>
-                                    <td><span class="list_group-member2"><?= _ent(get_user($audit_tasks->member2)->full_name); ?></span></td>
+                                    <td><span class="list_group-lead"><?= _ent($lead); ?></span></td>
                                     <td>
                                        <?php if ($audit_tasks->status == "review") { ?>
                                           <p class="help-block">(Audit telah dilakukan)</p>
@@ -217,17 +193,20 @@
                                        <?php } ?>
                                        <br>
 
+                                       <a href="#" onclick="modalDetail('<?= $audit_tasks->id; ?>')" class="label-primary"><i class="fa fa-edit "></i> Detail</a> <br>
+
+
                                        <?php is_allowed('audit_tasks_update', function () use ($audit_tasks) { ?>
-                                          <a href="<?= site_url('administrator/audit_tasks/edit/' . $audit_tasks->id); ?>" class="label-default"><i class="fa fa-edit "></i> <?= cclang('update_button'); ?></a> <br>
+                                          <!--<a href="<?= site_url('administrator/audit_tasks/edit/' . $audit_tasks->id); ?>" class="label-default"><i class="fa fa-edit "></i> <?= cclang('update_button'); ?></a> <br>-->
                                        <?php }) ?>
                                        <?php is_allowed('audit_tasks_delete', function () use ($audit_tasks) { ?>
                                           <a href="javascript:void(0);" data-href="<?= site_url('administrator/audit_tasks/delete/' . $audit_tasks->id); ?>" class="label-default remove-data"><i class="fa fa-close"></i> <?= cclang('remove_button'); ?></a>
                                        <?php }) ?>
 
                                     </td>
-                                 </tr>
-                              <?php endforeach; ?>
-                              <?php if ($audit_tasks_counts == 0) : ?>
+                                    </trclass=>
+                                 <?php endforeach; ?>
+                                 <?php if ($audit_tasks_counts == 0) : ?>
                                  <tr>
                                     <td colspan="100">
                                        Audit Tasks data is not available
@@ -251,9 +230,153 @@
 </section>
 <!-- /.content -->
 
+
+<!-- MODAL  -->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"><b>Detail Audit</b></h4>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div class="col-md-12 containerDetail">
+                  <table class="table table-striped">
+                     <tbody id='body1'>
+
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Tutup</button>
+         </div>
+      </div>
+   </div>
+</div>
+
 <!-- Page script -->
 
 <script>
+   function modalDetail(id) {
+      const container = $(".containerDetail");
+      container.empty();
+
+      $.ajax({
+         url: BASE_URL + '/administrator/audit_tasks/detailAudit?id=' + id,
+         type: "GET",
+         dataType: "json",
+         success: function(res) {
+            let main = '';
+            let jadwal = "";
+
+            const v = res.audit_tasks[0];
+            const lead = $("#lead_" + v.id).val();
+            const member1 = $("#member1_" + v.id).val();
+            const member2 = $("#member2_" + v.id).val();
+
+            jadwal += "<table class='table'>" +
+               "<tr>" +
+               "<th>Kegiatan</th>" +
+               "<th>Waktu</th>" +
+               "<th>Keterangan</th>" +
+               "<th>Penghubung</th>" +
+               "</tr>";
+            $.each(res.jadwal, function(i, val) {
+               jadwal +=
+                  "<tr>" +
+                  "<td>" + val.kegiatan + "</td>" +
+                  "<td>" + val.waktu + "</td>" +
+                  "<td>" + val.keterangan + "</td>" +
+                  "<td>" + val.penghubung + "</td>" +
+                  "</tr>";
+            });
+            jadwal += "</table>";
+
+
+            main += "<table class='table'>" +
+               "<tr><td class='bg-primary' colspan='3'><b>Perusahaan yang diaudit</b></td></tr>" +
+               "<tr>" +
+               "<td width='160'>Nama Perusahaan</td>" +
+               "<td>:</td>" +
+               "<td>" + v.nama_perusahaan + "</td>" +
+               "</tr>" +
+               "<tr>" +
+               "<td>Kantor Cabang</td>" +
+               "<td>:</td>" +
+               "<td>" + v.kantor_cabang + "</td>" +
+               "</tr>" +
+               "<tr>" +
+               "<td>Jenis Industri</td>" +
+               "<td>:</td>" +
+               "<td>" + v.jenis_industri + "</td>" +
+               "</tr>" +
+               "<tr><td class='bg-primary' colspan='3'><b>Pelaksanaan Audit</b></td></tr>" +
+               "<tr>" +
+               "<td>Tanggal</td>" +
+               "<td>:</td>" +
+               "<td>" + v.tanggal + "</td>" +
+               "</tr>" +
+               "<tr>" +
+               "<td>Tempat</td>" +
+               "<td>:</td>" +
+               "<td>" + v.tempat + "</td>" +
+               "</tr>" +
+
+               "<tr><td class='bg-primary' colspan='3'><b>Tujuan Audit</b></td></tr>" +
+               "<tr>" +
+               "<td>Tujuan</td>" +
+               "<td>:</td>" +
+               "<td>" + v.tujuan + "</td>" +
+               "</tr>" +
+
+               "<tr><td class='bg-primary' colspan='3'><b>Gambaran umum tempat kerja</b></td></tr>" +
+               "<tr>" +
+               "<td>Proses Produksi</td>" +
+               "<td>:</td>" +
+               "<td>" + v.proses_produksi + "</td>" +
+               "</tr>" +
+               "<tr>" +
+               "<td>Penerapan K3</td>" +
+               "<td>:</td>" +
+               "<td>" + v.penerapan_k3 + "</td>" +
+               "</tr>" +
+               "<tr><td class='bg-primary' colspan='3'><b>Jadwal Audit</b></td></tr>" +
+
+               "<tr>" +
+               "<td colspan='3'>" +
+               jadwal +
+               "</td>" +
+               "</tr>" +
+
+
+               "<tr><td class='bg-primary' colspan='3'><b>Tim Auditor</b></td></tr>" +
+               "<tr>" +
+               "<td>Lead Auditor</td>" +
+               "<td>:</td>" +
+               "<td>" + lead + "</td>" +
+               "</tr>" +
+               "<tr>" +
+               "<td>Member 1</td>" +
+               "<td>:</td>" +
+               "<td>" + member1 + "</td>" +
+               "</tr>" +
+               "<tr>" +
+               "<td>Member 2</td>" +
+               "<td>:</td>" +
+               "<td>" + member2 + "</td>" +
+               "</tr>" +
+               "</table>";
+            $('#myModal').modal('show');
+            container.append(main);
+         }
+      })
+   }
+
+
    $(document).ready(function() {
 
       (function() {

@@ -21,14 +21,15 @@ class Audit_tasks extends Admin
 		$this->lang->load('web_lang', $this->current_lang);
 	}
 
-
-	// public function test()
-	// {
-	// 	// $this->is_allowed('audit_tasks_list');
-
-	// 	var_dump($this->input->post('lingkup_audit'));
-	// 	die;
-	// }
+	function detailAudit()
+	{
+		$id = $this->input->get('id');
+		$data = [
+			'audit_tasks' 	=> $this->model_audit_tasks->get($id, 'id'),
+			'jadwal'		=> $this->db->get_where('jadwal', ['id_task' => $id])->result()
+		];
+		echo json_encode($data);
+	}
 
 	/**
 	 * show all Audit Taskss

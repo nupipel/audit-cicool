@@ -286,9 +286,11 @@
     </script>
     <footer class="main-footer">
       <div class="pull-right hidden-xs">
-        <b><?= cclang('version') ?></b> <?= VERSION ?>
+        <b><?= cclang('version') ?></b> 1.0
       </div>
-      <strong>Copyright &copy; 2016-<?= date('Y'); ?> <a href="#"><?= get_option('site_name'); ?></a>.</strong> All rights
+      <!-- <strong>Copyright &copy; <?= date('Y'); ?> <a href="#"><?= get_option('site_name'); ?></a>.</strong> All rights
+      reserved. -->
+      <strong>Copyright &copy; <?= date('Y'); ?> <a href="#">SIMAK3</a>.</strong> All rights
       reserved.
     </footer>
 

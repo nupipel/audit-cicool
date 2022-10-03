@@ -46,7 +46,8 @@ class Model_audit_tasks extends MY_Model
 
             $where = '(' . $where . ')';
         } else {
-            $where .= "(" . "audit_tasks." . $field . " LIKE '%" . $q . "%' )";
+            // $where .= "(" . "audit_tasks." . $field . " LIKE '%" . $q . "%' )";
+            $where .= "(" . "audit_tasks." . $field . " = " . $q . " )";
         }
 
         $this->join_avaiable()->filter_avaiable();
