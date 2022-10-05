@@ -320,12 +320,16 @@
                         $user_groups = $this->model_group->get_user_group_ids();
                         ?>
                         <div class="form-group group-nama_perusahaan ">
-                            <label for="nama_perusahaan" class="col-sm-2 control-label">Nama Perusahaan <i class="required">*</i>
+                            <label for="id_perusahaan" class="col-sm-2 control-label">Nama Perusahaan <i class="required">*</i>
                             </label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="nama_perusahaan" id="nama_perusahaan" placeholder="Nama Perusahaan" value="<?= set_value('nama_perusahaan'); ?>">
-                                <small class="info help-block">
-                                </small>
+
+                                <select class="form-control chosen chosen-select chosen-select-with-deselect" name="id_perusahaan" id="id_perusahaan" tabi-ndex="5" data-placeholder="Select Table">
+                                    <option value=""></option>
+                                    <?php foreach (db_get_all_data('master_perusahaan', ['enabled' => 1]) as $row) : ?>
+                                        <option value="<?= $row->id; ?>"><?= $row->nama_perusahaan; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
 
