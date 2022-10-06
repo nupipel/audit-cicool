@@ -88,7 +88,7 @@ class Audit_tasks extends Admin
 
 
 
-		$this->form_validation->set_rules('nama_perusahaan', 'Nama Perusahaan', 'trim|required|max_length[255]');
+		$this->form_validation->set_rules('id_perusahaan', 'Nama Perusahaan', 'trim|required|max_length[255]');
 
 
 		$this->form_validation->set_rules('kantor_cabang', 'Kantor Cabang', 'trim|max_length[255]');
@@ -119,7 +119,7 @@ class Audit_tasks extends Admin
 
 		if ($this->form_validation->run()) {
 			$audit_task = [
-				'nama_perusahaan' => $this->input->post('nama_perusahaan'),
+				'id_perusahaan' => $this->input->post('id_perusahaan'),
 				'kantor_cabang' => $this->input->post('kantor_cabang'),
 				'jenis_industri' => $this->input->post('jenis_industri'),
 				// 'lingkup_audit' => $this->input->post('lingkup_audit'),
@@ -506,6 +506,9 @@ class Audit_tasks extends Admin
 
 		$datas = $this->input->post();
 
+		var_dump($datas);
+		die;
+
 		$penjelasan = [];
 		$ketidaksesuaian = [];
 		$observasi = [];
@@ -826,7 +829,7 @@ class Audit_tasks extends Admin
 	{
 		$data = [
 			'id_task' 	=> $id_task,
-			'audit_task' 	=> $this->model_audit_tasks->find($id_task),
+			'audit_task' 	=> $this->model_audit_tasks->detailAudit($id_task),
 			'hasil_audits'	=> $this->model_audit_tasks->getHasilAudit($id_task),
 			'tidak_berlaku'		=> $this->model_audit_tasks->auditTidakBerlaku($id_task),
 			'ketidak_sesuaian'	=> $this->model_audit_tasks->auditKetidakSesuaian($id_task),

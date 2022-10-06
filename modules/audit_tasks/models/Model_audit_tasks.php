@@ -118,6 +118,12 @@ class Model_audit_tasks extends MY_Model
         return $this;
     }
 
+    function detailAudit($id_task)
+    {
+        $query = $this->db->select('b.nama_perusahaan ,b.alamat ,a.*')->from('audit_tasks a')->join('master_perusahaan b', 'b.id = a.id_perusahaan', 'left')->where("a.id = $id_task");
+        return $query->get()->row();
+    }
+
 
     function getHasilAudit($id_task)
     {

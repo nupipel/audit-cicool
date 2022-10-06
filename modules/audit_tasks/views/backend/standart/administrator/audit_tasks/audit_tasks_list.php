@@ -193,7 +193,7 @@
                                        <?php } ?>
                                        <br>
 
-                                       <a href="#" onclick="modalDetail('<?= $audit_tasks->id; ?>')" class="label-primary"><i class="fa fa-edit "></i> Detail</a> <br>
+                                       <a href="#" onclick="modalDetail('<?= $audit_tasks->id; ?>')" class="label-default"><i class="fa fa-newspaper-o"></i> Detail</a>
 
 
                                        <?php is_allowed('audit_tasks_update', function () use ($audit_tasks) { ?>
