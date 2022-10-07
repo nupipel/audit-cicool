@@ -6,7 +6,7 @@ class Model_audit_tasks extends MY_Model
 
     private $primary_key    = 'id';
     private $table_name     = 'audit_tasks';
-    public $field_search   = ['nama_perusahaan', 'kantor_cabang', 'jenis_industri', 'tanggal', 'tempat', 'tujuan', 'proses_produksi', 'penerapan_k3', 'lead', 'member1', 'member2'];
+    public $field_search   = ['tanggal', 'tempat', 'tujuan', 'proses_produksi', 'penerapan_k3', 'lead', 'member1', 'member2'];
     public $sort_option = ['id', 'DESC'];
 
     public function __construct()
@@ -103,8 +103,8 @@ class Model_audit_tasks extends MY_Model
     public function join_avaiable()
     {
 
-        // $this->db->select('kriteria_audit.kriteria,audit_tasks.*,kriteria_audit.kriteria as kriteria_audit_kriteria,kriteria_audit.kriteria as kriteria');
-
+        $this->db->select('audit_tasks.*,master_perusahaan.nama_perusahaan, master_perusahaan.kantor_cabang,master_perusahaan.jenis_industri');
+        $this->db->join('master_perusahaan', 'master_perusahaan.id = audit_tasks.id_perusahaan', 'left');
 
         return $this;
     }
@@ -120,7 +120,7 @@ class Model_audit_tasks extends MY_Model
 
     function detailAudit($id_task)
     {
-        $query = $this->db->select('b.nama_perusahaan ,b.alamat ,a.*')->from('audit_tasks a')->join('master_perusahaan b', 'b.id = a.id_perusahaan', 'left')->where("a.id = $id_task");
+        $query = $this->db->select('b.nama_perusahaan,b.kantor_cabang,b.jenis_industri,b.alamat ,a.*')->from('audit_tasks a')->join('master_perusahaan b', 'b.id = a.id_perusahaan', 'left')->where("a.id = $id_task");
         return $query->get()->row();
     }
 
